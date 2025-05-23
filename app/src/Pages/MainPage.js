@@ -26,17 +26,36 @@ useEffect(() => {
     if (todos.length === 0) return;
 
     setGeneratingSummary(true);
+    setError('');
+    setSummary('');
+
     try {
       const response = await fetch('/api/summarize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ todos }), // ✅ Should match backend
+        body: JSON.stringify({ todos }),
       });
 
-      const data = await response.json();
-      if (data.summary) setSummary(data.summary);
+      const text = await response.text(); // ✅ Read response only once
+
+      let data;
+      try {
+        data = JSON.parse(text); // ✅ Try parsing as JSON
+      } catch (jsonError) {
+        setError(`Unexpected non-JSON response:\n\n${text}`);
+        console.warn('Received non-JSON response:', text);
+        return;
+      }
+
+      if (data.summary) {
+        setSummary(data.summary);
+      } else {
+        setError(data.error || 'No summary returned');
+      }
+
     } catch (err) {
-      setError('Failed to generate AI summary.');
+      console.error('Summary generation error:', err);
+      setError(`Failed to generate AI summary: ${err.message}`);
     } finally {
       setGeneratingSummary(false);
     }
@@ -44,7 +63,6 @@ useEffect(() => {
 
   generateSummary();
 }, [todos]);
-
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -223,10 +241,12 @@ useEffect(() => {
   <div className={`my-6 p-4 rounded-lg shadow ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
     <h2 className="text-lg font-semibold mb-2">📋 AI Summary</h2>
     {generatingSummary ? (
-      <p>Generating summary...</p>
-    ) : (
-      <pre className="whitespace-pre-wrap text-sm">{summary}</pre>
-    )}
+  <div>Generating summary...</div>
+) : summary ? (
+  <div>{summary}</div>
+) : error ? (
+  <div className="error">{error}</div>
+) : null}
   </div>
 )}
 </div>
