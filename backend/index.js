@@ -5,7 +5,7 @@ const cors = require('cors');
 const { sequelize } = require('./connect');
 const Todo = require('./models/Todo');
 const aiRoutes = require('./routes/ai'); // ✅ AI route
-
+const path=require('path')
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -17,7 +17,7 @@ app.use(express.json());
 sequelize.sync().then(() => {
   console.log('Database synced');
 });
-
+app.use(express.static(path.join(__dirname, '../app/build')));
 // Routes
 app.use('/api', aiRoutes); // ✅ Mount /api/summarize route
 
