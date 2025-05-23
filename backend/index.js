@@ -164,7 +164,10 @@ app.get('/todos/stats', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
+app.use(express.static(path.join(__dirname, '../app/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'app', 'build', 'index.html'));
+});
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
