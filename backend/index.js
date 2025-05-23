@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 app.use(express.json()); // For parsing application/json
 app.use(express.urlencoded({ extended: true })); 
-const { sequelize } = require('./connect');
+const sequelize  = require('./connect');
 const Todo = require('./models/Todo');
 const aiRoutes = require('./routes/ai'); // ✅ AI route
 
