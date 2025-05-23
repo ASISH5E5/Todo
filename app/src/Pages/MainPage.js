@@ -18,51 +18,51 @@ const MainPage = ({ user, onLogout }) => {
   const [dragOverColumn, setDragOverColumn] = useState(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const { apiCall } = useApi();
-const [summary, setSummary] = useState('');
-const [generatingSummary, setGeneratingSummary] = useState(false);
+// const [summary, setSummary] = useState('');
+// const [generatingSummary, setGeneratingSummary] = useState(false);
 
-useEffect(() => {
-  const generateSummary = async () => {
-    if (todos.length === 0) return;
+// useEffect(() => {
+//   const generateSummary = async () => {
+//     if (todos.length === 0) return;
 
-    setGeneratingSummary(true);
-    setError('');
-    setSummary('');
+//     setGeneratingSummary(true);
+//     setError('');
+//     setSummary('');
 
-    try {
-      const response = await fetch('/api/summarize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ todos }),
-      });
+//     try {
+//       const response = await fetch('/api/summarize', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ todos }),
+//       });
 
-      const text = await response.text(); // ✅ Read response only once
+//       const text = await response.text(); // ✅ Read response only once
 
-      let data;
-      try {
-        data = JSON.parse(text); // ✅ Try parsing as JSON
-      } catch (jsonError) {
-        setError(`Unexpected non-JSON response:\n\n${text}`);
-        console.warn('Received non-JSON response:', text);
-        return;
-      }
+//       let data;
+//       try {
+//         data = JSON.parse(text); // ✅ Try parsing as JSON
+//       } catch (jsonError) {
+//         setError(`Unexpected non-JSON response:\n\n${text}`);
+//         console.warn('Received non-JSON response:', text);
+//         return;
+//       }
 
-      if (data.summary) {
-        setSummary(data.summary);
-      } else {
-        setError(data.error || 'No summary returned');
-      }
+//       if (data.summary) {
+//         setSummary(data.summary);
+//       } else {
+//         setError(data.error || 'No summary returned');
+//       }
 
-    } catch (err) {
-      console.error('Summary generation error:', err);
-      setError(`Failed to generate AI summary: ${err.message}`);
-    } finally {
-      setGeneratingSummary(false);
-    }
-  };
+//     } catch (err) {
+//       console.error('Summary generation error:', err);
+//       setError(`Failed to generate AI summary: ${err.message}`);
+//     } finally {
+//       setGeneratingSummary(false);
+//     }
+//   };
 
-  generateSummary();
-}, [todos]);
+//   generateSummary();
+// }, [todos]);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -237,7 +237,7 @@ useEffect(() => {
             onAddTaskClick={() => setShowTaskForm(true)}
             taskCounts={taskCounts}
           />
-          <div>{summary && (
+          {/* <div>{summary && (
   <div className={`my-6 p-4 rounded-lg shadow ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
     <h2 className="text-lg font-semibold mb-2">📋 AI Summary</h2>
     {generatingSummary ? (
@@ -249,7 +249,7 @@ useEffect(() => {
 ) : null}
   </div>
 )}
-</div>
+</div> */}
 
           <div className="flex-1">
             <div className="grid grid-cols-3 gap-6">

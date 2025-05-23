@@ -1,16 +1,12 @@
-const path = require('path');
-
+// server/index.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
-app.use(express.json()); // For parsing application/json
-app.use(express.urlencoded({ extended: true })); 
-const sequelize  = require('./connect');
+const { sequelize } = require('./connect');
 const Todo = require('./models/Todo');
 const aiRoutes = require('./routes/ai'); // ✅ AI route
 
-
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -34,7 +30,6 @@ app.get('/todos', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-console.log('OpenAI key:', process.env.OPENAI_API_KEY);
 
 app.post('/todos', async (req, res) => {
   try {
@@ -56,15 +51,6 @@ app.post('/todos', async (req, res) => {
   } catch (error) {
     console.error('Error creating todo:', error);
     res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.get('/test-db', async (req, res) => {
-  try {
-    const [result] = await sequelize.query("SELECT 1+1 AS test");
-    res.json({ database: "Working", result });
-  } catch (err) {
-    res.status(500).json({ database: "Failed", error: err.message });
   }
 });
 
@@ -165,10 +151,7 @@ app.get('/todos/stats', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.use(express.static(path.join(__dirname, '../app/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'app', 'build', 'index.html'));
-});
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
